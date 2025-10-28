@@ -1,3 +1,8 @@
+import os
+
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_postgres import PGVector
+
 PROMPT_TEMPLATE = """
 CONTEXTO:
 {contexto}
@@ -25,5 +30,18 @@ PERGUNTA DO USUÁRIO:
 RESPONDA A "PERGUNTA DO USUÁRIO"
 """
 
-def search_prompt(question=None):
-    pass
+def search_prompt(question):
+    embeddings = GoogleGenerativeAIEmbeddings(model=os.getenv("GOOGLE_MODEL", "gemini-embedding-001"))
+
+    store = PGVector(
+        embeddings=embeddings,
+        collection_name=os.getenv("PG_VECTOR_COLLECTION_NAME"),
+        connection=os.getenv("DATABASE_URL"),
+        use_jsonb=True,
+    )
+
+    search_results = store.similarity_search_with_score(question, k=10)
+
+    context_string = "\n\n---\n\n".join([record[0].page_content for record in search_results])
+
+    return PROMPT_TEMPLATE.format(contexto=context_string, pergunta=question)
