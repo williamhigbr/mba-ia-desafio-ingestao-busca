@@ -10,7 +10,7 @@ load_dotenv()
 
 def ingest_pdf():
 
-    for k in ("GOOGLE_API_KEY",
+    for k in ("GOOGLE_EMBEDDING_MODEL",
               "DATABASE_URL",
               "PG_VECTOR_COLLECTION_NAME",
               "PDF_PATH"):
@@ -33,7 +33,7 @@ def ingest_pdf():
 
     document_ids = [f"mba-challenge-{i}" for i in range(len(metadata_enriched_records))]
 
-    embeddings = GoogleGenerativeAIEmbeddings(model=os.getenv("GOOGLE_MODEL","gemini-embedding-001"))
+    embeddings = GoogleGenerativeAIEmbeddings(model=os.getenv("GOOGLE_EMBEDDING_MODEL","gemini-embedding-001"))
 
     store = PGVector(
         embeddings=embeddings,

@@ -28,8 +28,8 @@ def main():
 
     contextualized_prompt = search_prompt(question=user_question)
 
-    print(f"Pergunta recebida: {user_question}")
-    print(f"contextualized_prompt: {contextualized_prompt}")
+    # print(f"Pergunta recebida: {user_question}")
+    # print(f"contextualized_prompt: {contextualized_prompt}")
 
     model = ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite", temperature=0)
     response = model.invoke(contextualized_prompt)
